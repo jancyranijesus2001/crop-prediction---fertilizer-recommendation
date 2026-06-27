@@ -1,0 +1,213 @@
+{% extends 'base.html' %}
+{% block title %} Crop Recommendation {% endblock title %}
+
+{% block body %}
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+  * { font-family: 'Poppins', sans-serif; }
+
+  .hero-image {
+    background-image: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)),
+                      url("/static/images/4.jpeg");
+    height: 220px;
+    background-position: center;
+    background-size: cover;
+    position: relative;
+  }
+  .hero-text {
+    text-align: center;
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+  }
+
+  .form-wrapper {
+    background: #f8f9fa;
+    border-radius: 18px;
+    padding: 2rem 2.5rem;
+    box-shadow: 0 4px 20px rgba(0,0,0,.07);
+    max-width: 700px;
+    margin: 2rem auto;
+  }
+  .form-section-title {
+    font-size: .8rem;
+    font-weight: 700;
+    color: #999;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    margin-top: 20px;
+  }
+  .form-control {
+    border-radius: 10px;
+    border: 1.5px solid #ddd;
+    font-size: .9rem;
+  }
+  .form-control:focus {
+    border-color: #27ae60;
+    box-shadow: 0 0 0 3px rgba(39,174,96,.15);
+  }
+  label { font-weight: 600; font-size: .88rem; color: #444; }
+
+  .model-option-card {
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 10px 14px;
+    cursor: pointer;
+    transition: all .2s;
+    background: white;
+    margin-bottom: 8px;
+  }
+  .model-option-card:hover { border-color: #27ae60; background: #f0faf4; }
+  .model-option-card input[type=radio]:checked + .model-label { color: #27ae60; }
+  .model-acc { font-size: .75rem; color: #27ae60; font-weight: 600; }
+
+  .btn-predict {
+    background: linear-gradient(135deg, #1a7a3e, #27ae60);
+    color: white;
+    border: none;
+    border-radius: 30px;
+    padding: 12px 40px;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: .5px;
+    transition: transform .15s, box-shadow .15s;
+  }
+  .btn-predict:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(39,174,96,.35);
+    color: white;
+  }
+
+  .info-tip {
+    font-size: .78rem;
+    color: #888;
+    margin-top: 3px;
+  }
+</style>
+
+<!-- Hero -->
+<div class="hero-image">
+  <div class="hero-text">
+    <p style="font-size:.85rem;">
+      <a href="{{ url_for('hello_world') }}" class="text-white">Home /</a>
+      <span> Crop Recommendation</span>
+    </p>
+    <h2 class="font-weight-bold">Smart Crop Recommendation</h2>
+    <p style="font-size:.82rem; opacity:.85;">Powered by Machine Learning + Explainable AI</p>
+  </div>
+</div>
+
+<!-- Sub-nav -->
+<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+  <div class="collapse navbar-collapse">
+    <div class="navbar-nav mx-auto">
+      <a class="nav-item nav-link" href="{{ url_for('dashboard') }}">Dashboard</a>
+      <a class="nav-item nav-link active" href="{{ url_for('crop_recommend') }}">Crop</a>
+      <a class="nav-item nav-link" href="{{ url_for('fertilizer_recommendation') }}">Fertilizer</a>
+      <a class="nav-item nav-link text-danger" href="{{ url_for('logout') }}">Logout</a>
+    </div>
+  </div>
+</nav>
+
+<!-- Form -->
+<div class="form-wrapper">
+  <h5 class="font-weight-bold text-center mb-1" style="color:#1a7a3e;">🌾 Enter Soil & Climate Details</h5>
+  <p class="text-center text-muted mb-3" style="font-size:.82rem;">
+    Fill in your soil test results and location. The system will fetch live weather data automatically.
+  </p>
+
+  <form method="POST" action="{{ url_for('crop_prediction') }}">
+
+    <!-- Soil Nutrients -->
+    <div class="form-section-title">🧪 Soil Nutrients (kg/ha)</div>
+    <div class="row">
+      <div class="col-md-4 mb-3">
+        <label>Nitrogen (N)</label>
+        <input type="number" step="0.1" class="form-control" name="nitrogen" placeholder="e.g. 90" required>
+        <div class="info-tip">Typical range: 0–140</div>
+      </div>
+      <div class="col-md-4 mb-3">
+        <label>Phosphorus (P)</label>
+        <input type="number" step="0.1" class="form-control" name="phosphorous" placeholder="e.g. 42" required>
+        <div class="info-tip">Typical range: 5–145</div>
+      </div>
+      <div class="col-md-4 mb-3">
+        <label>Potassium (K)</label>
+        <input type="number" step="0.1" class="form-control" name="pottasium" placeholder="e.g. 43" required>
+        <div class="info-tip">Typical range: 5–205</div>
+      </div>
+    </div>
+
+    <!-- Soil Properties -->
+    <div class="form-section-title">🌍 Soil Properties</div>
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <label>Soil pH</label>
+        <input type="number" step="0.01" min="0" max="14" class="form-control" name="ph" placeholder="e.g. 6.5" required>
+        <div class="info-tip">Optimal range: 5.5–7.5</div>
+      </div>
+      <div class="col-md-6 mb-3">
+        <label>Rainfall (mm)</label>
+        <input type="number" step="0.1" class="form-control" name="rainfall" placeholder="e.g. 202" required>
+        <div class="info-tip">Annual average in mm</div>
+      </div>
+    </div>
+
+    <!-- Location -->
+    <div class="form-section-title">📍 Location (for live weather)</div>
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <label>State</label>
+        <select onchange="print_city('state', this.selectedIndex);" id="sts" name="stt"
+                class="form-control" required></select>
+      </div>
+      <div class="col-md-6 mb-3">
+        <label>City</label>
+        <select id="state" class="form-control" name="city" required></select>
+        <script language="javascript">print_state("sts");</script>
+      </div>
+    </div>
+
+    <!-- Model Selection -->
+    <div class="form-section-title">🤖 Choose ML Model</div>
+    <div class="row">
+      {% if model_names %}
+        {% set acc_map = {'Random Forest': '99.1%', 'Decision Tree': '90.3%', 'SVM': '97.6%', 'XGBoost': '98.7%'} %}
+        {% for mname in model_names %}
+        <div class="col-md-6">
+          <label class="model-option-card d-flex align-items-center gap-2" style="gap:10px;">
+            <input type="radio" name="model_choice" value="{{ mname }}"
+                   {% if mname == 'Random Forest' %}checked{% endif %}
+                   style="accent-color:#27ae60; width:16px; height:16px;">
+            <span>
+              <span class="model-label fw-bold" style="font-size:.88rem;">{{ mname }}</span><br>
+              <span class="model-acc">Accuracy: {{ acc_map.get(mname, '—') }}</span>
+            </span>
+          </label>
+        </div>
+        {% endfor %}
+      {% else %}
+        <div class="col-12">
+          <div class="alert alert-info" style="font-size:.83rem; border-radius:10px;">
+            Using <strong>Random Forest</strong> (default). Add DecisionTree.pkl, SVM.pkl,
+            XGBoost.pkl to <code>models/</code> to enable model selection.
+          </div>
+          <input type="hidden" name="model_choice" value="Random Forest">
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="text-center mt-4">
+      <button type="submit" class="btn btn-predict">
+        🔍 Get Crop Recommendation + XAI Explanation
+      </button>
+    </div>
+  </form>
+</div>
+
+<footer class="text-center py-3 bg-dark text-light mt-4" style="font-size:.82rem;">
+  Smart Crop Recommendation System — Explainable AI Edition &nbsp;|&nbsp; Go Green 🌿
+</footer>
+{% endblock body %}

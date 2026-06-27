@@ -1,0 +1,296 @@
+{% extends 'base.html' %}
+{% block title %} Crop Result {% endblock title %}
+
+{% block body %}
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+  * { font-family: 'Poppins', sans-serif; }
+
+  .hero-image {
+    background-image: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)),
+                      url("/static/images/4.jpeg");
+    height: 220px;
+    background-position: center;
+    background-size: cover;
+    position: relative;
+  }
+  .hero-text {
+    text-align: center;
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+  }
+
+  /* ── result card ── */
+  .result-card {
+    background: linear-gradient(135deg, #1a7a3e 0%, #27ae60 100%);
+    border-radius: 20px;
+    color: white;
+    padding: 2rem 2.5rem;
+    box-shadow: 0 8px 30px rgba(39,174,96,.35);
+    text-align: center;
+  }
+  .crop-emoji { font-size: 3.5rem; }
+  .crop-name  { font-size: 2.2rem; font-weight: 700; letter-spacing: 1px; }
+  .badge-model {
+    background: rgba(255,255,255,.2);
+    border-radius: 20px;
+    padding: 4px 14px;
+    font-size: .8rem;
+    display: inline-block;
+    margin-top: 6px;
+  }
+  .confidence-ring {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255,255,255,.15);
+    border-radius: 30px;
+    padding: 6px 18px;
+    margin-top: 10px;
+    font-size: .95rem;
+    font-weight: 600;
+  }
+
+  /* ── section headings ── */
+  .section-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #1a7a3e;
+    border-left: 4px solid #27ae60;
+    padding-left: 10px;
+    margin-bottom: 1rem;
+    margin-top: 1.8rem;
+  }
+
+  /* ── input params table ── */
+  .param-table td { vertical-align: middle; font-size: .9rem; }
+  .param-badge {
+    background: #eafaf1;
+    border-radius: 8px;
+    padding: 3px 10px;
+    font-weight: 600;
+    color: #1a7a3e;
+    font-size: .85rem;
+  }
+
+  /* ── model comparison cards ── */
+  .model-card {
+    border-radius: 12px;
+    border: 2px solid #e9ecef;
+    padding: 12px 16px;
+    text-align: center;
+    transition: border-color .2s;
+  }
+  .model-card.active { border-color: #27ae60; background: #eafaf1; }
+  .model-card .pred-label { font-size: .78rem; color: #777; }
+  .model-card .pred-value { font-size: 1rem; font-weight: 700; color: #222; }
+  .model-card .acc-badge  {
+    font-size: .75rem;
+    background: #27ae60;
+    color: white;
+    border-radius: 12px;
+    padding: 2px 8px;
+    margin-top: 4px;
+    display: inline-block;
+  }
+
+  /* ── XAI chart card ── */
+  .chart-card {
+    background: #f8f9fa;
+    border-radius: 16px;
+    padding: 1.2rem;
+    box-shadow: 0 2px 12px rgba(0,0,0,.06);
+  }
+  .chart-card img { width: 100%; border-radius: 8px; }
+
+  /* ── explanation legend ── */
+  .legend-positive { color: #27ae60; font-weight: 600; }
+  .legend-negative { color: #e74c3c; font-weight: 600; }
+  .legend-neutral  { color: #3498db; font-weight: 600; }
+
+  .footer-bar {
+    background: #1a1a2e;
+    color: #aaa;
+    text-align: center;
+    padding: 20px;
+    font-size: .85rem;
+    margin-top: 3rem;
+  }
+</style>
+
+<!-- ── Hero ─────────────────────────────────── -->
+<div class="hero-image">
+  <div class="hero-text">
+    <p class="font-weight-bold" style="font-size:.9rem;">
+      <a href="{{ url_for('hello_world') }}" class="text-white">Home /</a>
+      <span> Crop Recommendation / Result</span>
+    </p>
+    <h2 class="font-weight-bold">AI-Powered Crop Recommendation</h2>
+    <p style="font-size:.85rem; opacity:.85;">Powered by Explainable Artificial Intelligence</p>
+  </div>
+</div>
+
+<!-- ── Sub-nav ───────────────────────────────── -->
+<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+  <div class="collapse navbar-collapse">
+    <div class="navbar-nav mx-auto">
+      <a class="nav-item nav-link" href="{{ url_for('dashboard') }}">Dashboard</a>
+      <a class="nav-item nav-link" href="{{ url_for('crop_recommend') }}">Crop</a>
+      <a class="nav-item nav-link" href="{{ url_for('fertilizer_recommendation') }}">Fertilizer</a>
+      <a class="nav-item nav-link text-danger" href="{{ url_for('logout') }}">Logout</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ── Main Content ──────────────────────────── -->
+<div class="container my-4">
+
+  <!-- 1. PREDICTION RESULT CARD -->
+  <div class="result-card mx-auto mb-4" style="max-width:560px;">
+    <div class="crop-emoji">🌾</div>
+    <p style="margin:6px 0 0; font-size:.9rem; opacity:.85;">Recommended Crop</p>
+    <div class="crop-name">{{ prediction | title }}</div>
+    <div class="badge-model">Model: {{ model_name }} &nbsp;|&nbsp; Accuracy: {{ model_accuracy }}%</div>
+    {% if confidence %}
+    <div>
+      <span class="confidence-ring">
+        ✅ Prediction Confidence: {{ confidence }}%
+      </span>
+    </div>
+    {% endif %}
+    <p class="mt-3 mb-0" style="font-size:.82rem; opacity:.75;">
+      Location: {{ city }} &nbsp;|&nbsp; Live weather data used for Temperature & Humidity
+    </p>
+  </div>
+
+  <div class="row">
+
+    <!-- 2. INPUT PARAMETERS -->
+    <div class="col-lg-5 col-md-12 mb-4">
+      <div class="section-title">📋 Input Parameters</div>
+      <div class="chart-card p-3">
+        <table class="table table-sm param-table mb-0">
+          <thead><tr><th>Parameter</th><th>Your Value</th></tr></thead>
+          <tbody>
+            {% for param, val in input_summary.items() %}
+            <tr>
+              <td>{{ param }}</td>
+              <td><span class="param-badge">{{ val }}</span></td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Radar chart -->
+      {% if radar_chart %}
+      <div class="section-title mt-3">🕸️ Parameter Profile</div>
+      <div class="chart-card">
+        <img src="data:image/png;base64,{{ radar_chart }}" alt="Radar chart"/>
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- 3. XAI EXPLANATION -->
+    <div class="col-lg-7 col-md-12 mb-4">
+      <div class="section-title">🧠 Explainable AI — Why this crop?</div>
+      <div class="chart-card">
+        <img src="data:image/png;base64,{{ xai_chart }}" alt="XAI Feature Importance Chart"/>
+        <p class="mt-2 mb-0" style="font-size:.78rem; color:#555; line-height:1.6;">
+          <span class="legend-positive">■ Green bars</span> = features that <strong>pushed</strong> the prediction towards <em>{{ prediction | title }}</em>.
+          <span class="legend-negative">■ Red bars</span> = features that <strong>reduced</strong> this crop's score.
+          <span class="legend-neutral">■ Blue bars</span> = overall feature importance weight.
+          Longer bars have a stronger influence on the final recommendation.
+        </p>
+      </div>
+
+      <!-- XAI Insight Summary -->
+      <div class="alert alert-success mt-3" style="border-radius:12px; font-size:.88rem;">
+        <strong>💡 AI Insight:</strong>
+        The model analysed your soil and climate profile across 7 parameters.
+        The most influential factors for recommending <strong>{{ prediction | title }}</strong>
+        are highlighted in the chart above. This transparency helps you understand
+        <em>exactly why</em> this crop was chosen — not just what was chosen.
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. ALL MODELS COMPARISON -->
+  {% if all_preds %}
+  <div class="section-title">⚖️ All Models Comparison</div>
+  <p style="font-size:.83rem; color:#666; margin-top:-10px; margin-bottom:16px;">
+    See what each trained model predicts for the same input — consistency across models increases confidence.
+  </p>
+  <div class="row">
+    {% for mname, mdata in all_preds.items() %}
+    <div class="col-lg-3 col-md-6 col-12 mb-3">
+      <div class="model-card {% if mname == model_name %}active{% endif %}">
+        <div class="pred-label">{{ mname }}</div>
+        <div class="pred-value">{{ mdata.pred | title }}</div>
+        <span class="acc-badge">{{ mdata.acc }}% Accuracy</span>
+        {% if mname == model_name %}
+        <div style="font-size:.7rem; color:#27ae60; margin-top:4px;">✓ Selected</div>
+        {% endif %}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <!-- 5. WHAT TO DO NEXT -->
+  <div class="section-title">🚜 Next Steps</div>
+  <div class="row">
+    <div class="col-md-4 mb-3">
+      <div class="card border-0 shadow-sm h-100" style="border-radius:14px;">
+        <div class="card-body text-center p-3">
+          <div style="font-size:2rem;">🌱</div>
+          <h6 class="mt-2 font-weight-bold">Check Fertilizer</h6>
+          <p style="font-size:.82rem; color:#666;">
+            Get the right NPK fertilizer recommendation for <strong>{{ prediction | title }}</strong>.
+          </p>
+          <a href="{{ url_for('fertilizer_recommendation') }}" class="btn btn-sm btn-success" style="border-radius:20px;">
+            Go to Fertilizer →
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4 mb-3">
+      <div class="card border-0 shadow-sm h-100" style="border-radius:14px;">
+        <div class="card-body text-center p-3">
+          <div style="font-size:2rem;">🔁</div>
+          <h6 class="mt-2 font-weight-bold">Try Another Model</h6>
+          <p style="font-size:.82rem; color:#666;">
+            Re-run the prediction with a different algorithm to compare results.
+          </p>
+          <a href="{{ url_for('crop_recommend') }}" class="btn btn-sm btn-outline-success" style="border-radius:20px;">
+            New Prediction →
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4 mb-3">
+      <div class="card border-0 shadow-sm h-100" style="border-radius:14px;">
+        <div class="card-body text-center p-3">
+          <div style="font-size:2rem;">📊</div>
+          <h6 class="mt-2 font-weight-bold">View Dashboard</h6>
+          <p style="font-size:.82rem; color:#666;">
+            Check your prediction history and model performance metrics.
+          </p>
+          <a href="{{ url_for('dashboard') }}" class="btn btn-sm btn-outline-secondary" style="border-radius:20px;">
+            Dashboard →
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+<div class="footer-bar">
+  Smart Crop Recommendation System — Explainable AI Edition &nbsp;|&nbsp; Go Green 🌿
+</div>
+
+{% endblock %}

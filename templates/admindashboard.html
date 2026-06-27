@@ -1,0 +1,156 @@
+{% extends 'base.html' %}
+{% block title %}Admin Dashboard{% endblock %}
+{% block body %}
+<style>
+  .hero-image {
+    background:linear-gradient(rgba(0,0,0,.6),rgba(0,0,0,.6)),
+               url('/static/images/4.jpeg') center/cover;
+    height:180px; display:flex; align-items:center; justify-content:center; text-align:center; color:white;
+  }
+  .hero-image h2 { font-size:2rem; font-weight:700; }
+  .stat-card {
+    border-radius:14px; padding:1.2rem 1.5rem; color:white;
+    display:flex; align-items:center; gap:14px;
+    box-shadow:0 4px 18px rgba(0,0,0,.12);
+  }
+  .stat-icon { font-size:2.2rem; }
+  .stat-val   { font-size:1.8rem; font-weight:700; line-height:1; }
+  .stat-lbl   { font-size:.75rem; opacity:.85; }
+  .section-title {
+    font-size:1rem; font-weight:700; color:#c0392b;
+    border-left:4px solid #e74c3c; padding-left:10px; margin:1.8rem 0 1rem;
+  }
+  .table th { font-size:.78rem; color:#888; font-weight:700; text-transform:uppercase; }
+  .table td { font-size:.85rem; vertical-align:middle; }
+  .badge-crop {
+    background:#eafaf1; color:#1a7a3e; border-radius:8px;
+    padding:2px 10px; font-weight:600; font-size:.78rem;
+  }
+  .footer { background:#1a1a2e; color:#aaa; text-align:center; padding:20px; font-size:.82rem; margin-top:3rem; }
+</style>
+
+<div class="hero-image">
+  <div>
+    <h2>🛡️ Admin Dashboard</h2>
+    <p style="opacity:.8; font-size:.85rem;">System overview and user management</p>
+  </div>
+</div>
+
+<div class="container my-4">
+
+  <!-- Top actions -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h5 style="font-weight:700; color:#333; margin:0;">Welcome, Admin 👋</h5>
+    <a href="{{ url_for('logout') }}" class="btn btn-danger btn-sm" style="border-radius:20px; padding:6px 20px; font-weight:600;">
+      🚪 Logout
+    </a>
+  </div>
+
+  <!-- Stat cards -->
+  <div class="row g-3 mb-2">
+    <div class="col-md-3 col-6">
+      <div class="stat-card" style="background:linear-gradient(135deg,#c0392b,#e74c3c);">
+        <span class="stat-icon">👥</span>
+        <div><div class="stat-lbl">Total Users</div><div class="stat-val">{{ alluser|length }}</div></div>
+      </div>
+    </div>
+    <div class="col-md-3 col-6">
+      <div class="stat-card" style="background:linear-gradient(135deg,#1a7a3e,#27ae60);">
+        <span class="stat-icon">📩</span>
+        <div><div class="stat-lbl">Contact Queries</div><div class="stat-val">{{ alltodo|length }}</div></div>
+      </div>
+    </div>
+    <div class="col-md-3 col-6">
+      <div class="stat-card" style="background:linear-gradient(135deg,#1565c0,#1976d2);">
+        <span class="stat-icon">🌾</span>
+        <div><div class="stat-lbl">Predictions Made</div><div class="stat-val">{{ all_logs|length if all_logs else 0 }}</div></div>
+      </div>
+    </div>
+    <div class="col-md-3 col-6">
+      <div class="stat-card" style="background:linear-gradient(135deg,#6c3483,#9b59b6);">
+        <span class="stat-icon">🤖</span>
+        <div><div class="stat-lbl">ML Models</div><div class="stat-val">4</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contact queries -->
+  <div class="section-title">📩 Contact Queries</div>
+  <div class="table-responsive">
+    <table class="table table-hover">
+      <thead class="table-light">
+        <tr>
+          <th>#</th><th>Name</th><th>Email</th><th>Message</th><th>Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for c in alltodo %}
+        <tr>
+          <td>{{ c.sno }}</td>
+          <td><strong>{{ c.name }}</strong></td>
+          <td style="font-size:.8rem; color:#888;">{{ c.email }}</td>
+          <td>{{ c.text[:80] }}{% if c.text|length > 80 %}...{% endif %}</td>
+          <td style="font-size:.78rem; color:#aaa;">{{ c.date_created.strftime('%d %b %Y') }}</td>
+        </tr>
+        {% else %}
+        <tr><td colspan="5" class="text-center text-muted py-3">No queries yet.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Users -->
+  <div class="section-title">👥 Registered Users</div>
+  <div class="table-responsive">
+    <table class="table table-hover">
+      <thead class="table-light">
+        <tr><th>#</th><th>Username</th></tr>
+      </thead>
+      <tbody>
+        {% for u in alluser %}
+        <tr>
+          <td>{{ u.id }}</td>
+          <td><strong>{{ u.username }}</strong></td>
+        </tr>
+        {% else %}
+        <tr><td colspan="2" class="text-center text-muted py-3">No users yet.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Prediction logs -->
+  {% if all_logs %}
+  <div class="section-title">🌾 Recent Prediction Logs</div>
+  <div class="table-responsive">
+    <table class="table table-hover">
+      <thead class="table-light">
+        <tr>
+          <th>#</th><th>User ID</th><th>Crop</th><th>Model</th>
+          <th>N</th><th>P</th><th>K</th><th>Temp</th><th>pH</th><th>Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for log in all_logs[:20] %}
+        <tr>
+          <td>{{ log.id }}</td>
+          <td>{{ log.user_id }}</td>
+          <td><span class="badge-crop">{{ log.prediction | title }}</span></td>
+          <td style="font-size:.8rem;">{{ log.model_used }}</td>
+          <td>{{ log.nitrogen }}</td>
+          <td>{{ log.phosphorus }}</td>
+          <td>{{ log.potassium }}</td>
+          <td>{{ log.temperature }}°C</td>
+          <td>{{ log.ph }}</td>
+          <td style="font-size:.78rem; color:#aaa;">{{ log.date_created.strftime('%d %b %Y') }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% endif %}
+
+</div>
+
+<div class="footer">🌿 Smart Crop Recommendation System — Admin Panel</div>
+{% endblock %}

@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% block title %}Sign Up{% endblock %}
+{% block body %}
+<style>
+  .auth-page {
+    min-height: 85vh; display: flex; align-items: center; justify-content: center;
+    background: linear-gradient(135deg, #eafaf1 0%, #f0f9ff 100%);
+    padding: 2rem 1rem;
+  }
+  .auth-card {
+    background: white; border-radius: 22px;
+    padding: 2.5rem 2rem; width: 100%; max-width: 420px;
+    box-shadow: 0 8px 40px rgba(39,174,96,.12);
+  }
+  .auth-icon  { font-size: 3rem; text-align: center; margin-bottom: .5rem; }
+  .auth-title { text-align:center; font-weight:700; color:#1a7a3e; font-size:1.5rem; margin-bottom:.3rem; }
+  .auth-sub   { text-align:center; color:#999; font-size:.82rem; margin-bottom:1.5rem; }
+  .form-control {
+    border-radius: 10px; border: 1.5px solid #ddd;
+    padding: 10px 14px; font-size: .9rem;
+  }
+  .form-control:focus { border-color: #27ae60; box-shadow: 0 0 0 3px rgba(39,174,96,.12); }
+  label { font-weight: 600; font-size: .85rem; color: #444; margin-bottom: 5px; }
+  .btn-auth {
+    width: 100%; padding: 12px;
+    background: linear-gradient(135deg, #1a7a3e, #27ae60);
+    color: white; border: none; border-radius: 12px;
+    font-weight: 700; font-size: .95rem; cursor: pointer;
+    transition: transform .15s, box-shadow .15s;
+  }
+  .btn-auth:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(39,174,96,.3); }
+  .auth-link { text-align:center; margin-top:1rem; font-size:.82rem; color:#777; }
+  .auth-link a { color:#1a7a3e; font-weight:600; text-decoration:none; }
+  .error-msg { color:#e74c3c; font-size:.78rem; margin-top:4px; }
+  .req-note  { font-size:.75rem; color:#aaa; margin-top:3px; }
+</style>
+
+<div class="auth-page">
+  <div class="auth-card">
+    <div class="auth-icon">✍️</div>
+    <div class="auth-title">Create Account</div>
+    <div class="auth-sub">Join to start getting smart crop recommendations</div>
+
+    <form method="POST" action="">
+      {{ form.hidden_tag() }}
+      <div class="mb-3">
+        <label>Username</label>
+        {{ form.username(class="form-control", placeholder="Choose a username") }}
+        <div class="req-note">5–20 characters</div>
+        {% for err in form.username.errors %}
+          <div class="error-msg">{{ err }}</div>
+        {% endfor %}
+      </div>
+      <div class="mb-4">
+        <label>Password</label>
+        {{ form.password(class="form-control", placeholder="Choose a password") }}
+        <div class="req-note">5–20 characters</div>
+        {% for err in form.password.errors %}
+          <div class="error-msg">{{ err }}</div>
+        {% endfor %}
+      </div>
+      <button type="submit" class="btn-auth">🚀 Create Account</button>
+    </form>
+
+    <div class="auth-link">
+      Already have an account? <a href="{{ url_for('login') }}">Sign in here</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

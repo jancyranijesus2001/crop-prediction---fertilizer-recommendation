@@ -1,0 +1,195 @@
+{% extends 'base.html' %}
+{% block title %}Home{% endblock %}
+{% block body %}
+<style>
+  .hero-section {
+    background: linear-gradient(135deg, rgba(26, 122, 63, 0.44)),
+                url('/static/images/d.jpg') center/cover;
+    min-height: 520px;
+    display: flex; align-items: center; justify-content: center; text-align: center;
+    color: white; padding: 3rem 1rem;
+  }
+  .hero-section h1 { font-size: 3rem; font-weight: 700; line-height: 1.2; }
+  .hero-section p  { font-size: 1.1rem; opacity: .9; }
+  .btn-hero {
+    background: white; color: #1a7a3e; font-weight: 700;
+    border-radius: 30px; padding: 12px 32px; font-size: 1rem;
+    text-decoration: none; display: inline-block; margin-top: 10px;
+    transition: transform .2s, box-shadow .2s;
+  }
+  .btn-hero:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,.2); color: #1a7a3e; }
+
+  .section-title { font-size: 2rem; font-weight: 700; color: #1a7a3e; }
+  .section-sub   { color: #777; font-size: .95rem; }
+
+  .feature-card {
+    background: white; border-radius: 18px;
+    padding: 1.8rem 1.5rem; text-align: center;
+    box-shadow: 0 4px 20px rgba(0,0,0,.06);
+    transition: transform .2s, box-shadow .2s; height: 100%;
+  }
+  .feature-card:hover { transform: translateY(-5px); box-shadow: 0 10px 30px rgba(39,174,96,.15); }
+  .feature-icon { font-size: 2.8rem; margin-bottom: 1rem; }
+  .feature-card h5 { font-weight: 700; color: #222; }
+  .feature-card p  { font-size: .85rem; color: #666; line-height: 1.7; }
+
+  .service-card {
+    border-radius: 18px; overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,.08); transition: transform .2s;
+  }
+  .service-card:hover { transform: translateY(-5px); }
+  .service-card img { height: 200px; object-fit: cover; width: 100%; }
+  .service-body { background: #1a1a2e; color: white; padding: 1.2rem; text-align: center; }
+  .service-body p { font-size: .82rem; color: #ccc; }
+  .btn-service {
+    background: linear-gradient(135deg, #1a7a3e, #27ae60);
+    color: white; border: none; border-radius: 20px;
+    padding: 7px 20px; font-size: .82rem; font-weight: 600;
+    text-decoration: none; display: inline-block;
+  }
+
+  .stats-section { background: linear-gradient(135deg, #1a7a3e, #27ae60); color: white; padding: 3rem 0; }
+  .stat-item { text-align: center; }
+  .stat-item .num { font-size: 2.5rem; font-weight: 700; }
+  .stat-item .lbl { font-size: .85rem; opacity: .85; }
+
+  .footer {
+    background: #1a1a2e; color: #aaa; text-align: center;
+    padding: 24px; font-size: .82rem; margin-top: 0;
+  }
+</style>
+
+<!-- Hero -->
+<section class="hero-section">
+  <div>
+    <p style="font-size:.85rem; opacity:.8; letter-spacing:2px; text-transform:uppercase;">
+      Powered by Machine Learning & Explainable AI
+    </p>
+    <h1>Smart Crop Recommendation<br>System</h1>
+    <p>Enter your soil and location data — get instant AI-powered<br>crop advice with full transparency on why each crop was chosen.</p>
+    <a href="{{ url_for('login') }}" class="btn-hero">🚀 Get Started</a>
+    &nbsp;
+    <a href="{{ url_for('aboutus') }}" class="btn-hero" style="background:transparent; border: 2px solid white; color:white;">Learn More</a>
+  </div>
+</section>
+
+<!-- Stats -->
+<section class="stats-section">
+  <div class="container">
+    <div class="row text-center">
+      <div class="col-md-3 col-6 stat-item mb-3">
+        <div class="num">4</div><div class="lbl">ML Models</div>
+      </div>
+      <div class="col-md-3 col-6 stat-item mb-3">
+        <div class="num">22</div><div class="lbl">Crop Types</div>
+      </div>
+      <div class="col-md-3 col-6 stat-item mb-3">
+        <div class="num">99%</div><div class="lbl">Best Accuracy</div>
+      </div>
+      <div class="col-md-3 col-6 stat-item mb-3">
+        <div class="num">XAI</div><div class="lbl">Explainable AI</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Features -->
+<section class="py-5" style="background:#f5f7f5;">
+  <div class="container">
+    <div class="text-center mb-5">
+      <h2 class="section-title">Why Use Our System?</h2>
+      <p class="section-sub">Built on cutting-edge ML algorithms with full explainability</p>
+    </div>
+    <div class="row g-4">
+      <div class="col-lg-3 col-md-6">
+        <div class="feature-card">
+          <div class="feature-icon">🤖</div>
+          <h5>4 ML Models</h5>
+          <p>Random Forest, Decision Tree, SVM & XGBoost — choose the model and compare results.</p>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-6">
+        <div class="feature-card">
+          <div class="feature-icon">🧠</div>
+          <h5>Explainable AI</h5>
+          <p>Every prediction comes with a SHAP chart showing exactly which factors influenced the decision.</p>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-6">
+        <div class="feature-card">
+          <div class="feature-icon">🌦️</div>
+          <h5>Live Weather</h5>
+          <p>Auto-fetches real-time temperature & humidity from OpenWeatherMap for your city.</p>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-6">
+        <div class="feature-card">
+          <div class="feature-icon">🧪</div>
+          <h5>Fertilizer Advice</h5>
+          <p>NPK gap analysis shows the exact nutrients your soil is missing for your chosen crop.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Services -->
+<section class="py-5" style="background:white;">
+  <div class="container">
+    <div class="text-center mb-5">
+      <h2 class="section-title">Our Services</h2>
+      <p class="section-sub">Complete farming decision support system</p>
+    </div>
+    <div class="row g-4 justify-content-center">
+      <div class="col-lg-4 col-md-6">
+        <div class="service-card">
+          <img src="{{ url_for('static', filename='images/a.jpg') }}" alt="Crop">
+          <div class="service-body">
+            <h5 class="fw-bold">🌾 Crop Recommendation</h5>
+            <p>AI-powered crop selection using 4 ML models + SHAP explainability</p>
+            <a href="{{ url_for('crop_recommend') }}" class="btn-service">Predict Now</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4 col-md-6">
+        <div class="service-card">
+          <img src="{{ url_for('static', filename='images/c.jpg') }}" alt="Fertilizer">
+          <div class="service-body">
+            <h5 class="fw-bold">🧪 Fertilizer Suggestion</h5>
+            <p>NPK gap analysis and fertilizer advice tailored to your crop</p>
+            <a href="{{ url_for('fertilizer_recommendation') }}" class="btn-service">Get Advice</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- About snippet -->
+<section class="py-5" style="background:#f5f7f5;">
+  <div class="container">
+    <div class="row align-items-center g-5">
+      <div class="col-lg-6">
+        <img src="{{ url_for('static', filename='images/3.jpeg') }}" alt="About"
+             style="width:100%; border-radius:18px; box-shadow:0 8px 30px rgba(0,0,0,.1);">
+      </div>
+      <div class="col-lg-6">
+        <h2 class="section-title">Improving Agriculture,<br>Improving Lives</h2>
+        <p style="color:#666; line-height:1.9; margin-top:1rem;">
+          We use state-of-the-art machine learning and deep learning technologies
+          to help you guide through the entire farming process. Make informed decisions
+          to understand the demographics of your area, understand the factors that affect
+          your crop and keep them healthy for a successful yield.
+        </p>
+        <a href="{{ url_for('aboutus') }}" class="btn-service" style="margin-top:1rem; display:inline-block; padding:10px 24px;">
+          Read More →
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="footer">
+  🌿 Smart Crop Recommendation System — Explainable AI Edition &nbsp;|&nbsp; Go Green
+</div>
+{% endblock %}

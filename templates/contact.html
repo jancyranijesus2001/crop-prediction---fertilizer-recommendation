@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+{% block title %}Contact{% endblock %}
+{% block body %}
+<style>
+  .hero-image {
+    background: linear-gradient(rgba(26,122,62,.75), rgba(39,174,96,.6)),
+                url('/static/images/d.jpg') center/cover;
+    height: 220px; display:flex; align-items:center; justify-content:center; text-align:center; color:white;
+  }
+  .hero-image h1 { font-size:2.8rem; font-weight:700; }
+  .contact-card {
+    background: white; border-radius: 20px; padding: 2.5rem;
+    box-shadow: 0 8px 40px rgba(0,0,0,.08); max-width: 600px; margin: auto;
+  }
+  .form-control {
+    border-radius: 10px; border: 1.5px solid #ddd;
+    padding: 10px 14px; font-size: .9rem;
+  }
+  .form-control:focus { border-color: #27ae60; box-shadow: 0 0 0 3px rgba(39,174,96,.12); }
+  label { font-weight: 600; font-size: .85rem; color: #444; margin-bottom: 5px; }
+  .btn-submit {
+    background: linear-gradient(135deg, #1a7a3e, #27ae60);
+    color: white; border: none; border-radius: 12px;
+    padding: 12px 32px; font-weight: 700; font-size: .95rem; cursor: pointer; width: 100%;
+    transition: transform .15s;
+  }
+  .btn-submit:hover { transform: translateY(-2px); }
+  .contact-info-card {
+    background: white; border-radius: 14px; padding: 1.2rem;
+    box-shadow: 0 4px 16px rgba(0,0,0,.06); text-align: center;
+  }
+  .footer { background:#1a1a2e; color:#aaa; text-align:center; padding:20px; font-size:.82rem; margin-top:3rem; }
+</style>
+
+<div class="hero-image">
+  <div>
+    <h1>📬 Contact Us</h1>
+    <p style="opacity:.85;">We'd love to hear from you</p>
+  </div>
+</div>
+
+<section class="py-5" style="background:#f5f7f5;">
+  <div class="container">
+    <div class="row g-4 align-items-start">
+
+      <!-- Contact info cards -->
+      <div class="col-lg-4">
+        <h4 style="font-weight:700; color:#1a7a3e; margin-bottom:1.5rem;">Get In Touch</h4>
+        <div class="contact-info-card mb-3">
+          <div style="font-size:2rem;">📧</div>
+          <h6 style="font-weight:700; margin-top:.5rem;">Email</h6>
+          <p style="font-size:.82rem; color:#777; margin:0;">support@cropml.com</p>
+        </div>
+        <div class="contact-info-card mb-3">
+          <div style="font-size:2rem;">🌐</div>
+          <h6 style="font-weight:700; margin-top:.5rem;">Website</h6>
+          <p style="font-size:.82rem; color:#777; margin:0;">www.cropml.com</p>
+        </div>
+        <div class="contact-info-card">
+          <div style="font-size:2rem;">🌿</div>
+          <h6 style="font-weight:700; margin-top:.5rem;">Mission</h6>
+          <p style="font-size:.82rem; color:#777; margin:0;">Helping farmers make smarter decisions with AI</p>
+        </div>
+      </div>
+
+      <!-- Form -->
+      <div class="col-lg-8">
+        <div class="contact-card">
+          <h4 style="font-weight:700; color:#1a7a3e; margin-bottom:1.5rem;">✉️ Send Us a Message</h4>
+          {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+              {% for cat, msg in messages %}
+                <div class="alert alert-success" style="border-radius:10px; font-size:.85rem;">{{ msg }}</div>
+              {% endfor %}
+            {% endif %}
+          {% endwith %}
+          <form method="POST" action="">
+            <div class="mb-3">
+              <label>Your Name</label>
+              <input type="text" class="form-control" name="name" placeholder="Enter your name" required>
+            </div>
+            <div class="mb-3">
+              <label>Email Address</label>
+              <input type="email" class="form-control" name="email" placeholder="Enter your email" required>
+            </div>
+            <div class="mb-4">
+              <label>Message</label>
+              <textarea class="form-control" name="text" rows="5"
+                        placeholder="Write your message or query here..." required></textarea>
+            </div>
+            <button type="submit" class="btn-submit">📨 Send Message</button>
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="footer">🌿 Smart Crop Recommendation System — Explainable AI Edition &nbsp;|&nbsp; Go Green</div>
+{% endblock %}

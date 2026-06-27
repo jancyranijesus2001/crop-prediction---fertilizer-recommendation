@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <script src="{{ url_for('static', filename='scripts/cities.js') }}"></script>
+  <title>{% block title %}{% endblock %} - Smart Crop ML</title>
+  <style>
+    * { font-family: 'Poppins', sans-serif; }
+
+    .top-header {
+      background: linear-gradient(135deg, #1a7a3e 0%, #27ae60 100%);
+      padding: 10px 20px;
+    }
+    .top-header .brand { color: white; text-decoration: none; font-weight: 700; font-size: 1.1rem; }
+    .top-header .brand span { color: #a8e6c1; }
+    .top-header .auth-btns a {
+      color: white; text-decoration: none;
+      padding: 5px 14px; border-radius: 20px;
+      font-size: .82rem; font-weight: 600;
+      border: 1.5px solid rgba(255,255,255,.4);
+      margin-left: 6px; transition: background .2s;
+    }
+    .top-header .auth-btns a:hover { background: rgba(255,255,255,.2); }
+    .top-header .auth-btns a.admin-btn { background: rgba(0,0,0,.25); border-color: rgba(255,255,255,.3); }
+
+    .main-nav {
+      background: white;
+      box-shadow: 0 2px 12px rgba(0,0,0,.07);
+      padding: 0 20px;
+    }
+    .main-nav .nav-link {
+      font-weight: 600; font-size: .88rem; color: #444 !important;
+      padding: 14px 16px !important; position: relative;
+    }
+    .main-nav .nav-link:hover { color: #76be94 !important; }
+    .main-nav .nav-link.active { color: #b3beb8 !important; }
+    .main-nav .nav-link.active::after {
+      content: ''; position: absolute; bottom: 0; left: 16px;
+      right: 16px; height: 3px; background: #3b443f; border-radius: 2px;
+    }
+  </style>
+</head>
+<body style="background:#f5f7f5;">
+
+<header>
+  <!-- Top Bar -->
+  <div class="top-header">
+    <div class="container-fluid d-flex justify-content-between align-items-center">
+      <a href="{{ url_for('hello_world') }}" class="brand">
+        🌾 Smart <span>Crop ML</span>
+      </a>
+
+    </div>
+  </div>
+  <!-- Main Nav -->
+  <nav class="main-nav navbar navbar-expand-lg">
+    <div class="container-fluid">
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="mainNav">
+        <ul class="navbar-nav mx-auto">
+          <li class="nav-item">
+            <a class="nav-link {% if request.endpoint == 'hello_world' %}active{% endif %}"
+               href="{{ url_for('hello_world') }}">🏠 Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link {% if request.endpoint == 'aboutus' %}active{% endif %}"
+               href="{{ url_for('aboutus') }}">ℹ️ About Us</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link {% if request.endpoint == 'contact' %}active{% endif %}"
+               href="{{ url_for('contact') }}">📬 Contact</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+</header>
+
+{% block body %}{% endblock %}
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
