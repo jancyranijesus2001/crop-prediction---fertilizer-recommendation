@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% block title %}Fertilizer{% endblock %}
+{% block body %}
+<style>
+  .hero-image {
+    background: linear-gradient(rgba(21,101,192,.8), rgba(25,118,210,.7)),
+                url('/static/images/4.jpeg') center/cover;
+    height:220px; display:flex; align-items:center; justify-content:center; text-align:center; color:white;
+  }
+  .hero-image h2 { font-size:2rem; font-weight:700; }
+  .sub-nav { background:white; box-shadow:0 2px 10px rgba(0,0,0,.06); }
+  .sub-nav .nav-link { font-weight:600; font-size:.88rem; color:#444 !important; padding:12px 16px !important; }
+  .sub-nav .nav-link:hover, .sub-nav .nav-link.active { color:#27ae60 !important; }
+  .form-wrapper {
+    background:white; border-radius:18px; padding:2rem 2.5rem;
+    box-shadow:0 4px 20px rgba(0,0,0,.07); max-width:640px; margin:2rem auto;
+  }
+  .form-section-title {
+    font-size:.78rem; font-weight:700; color:#999; letter-spacing:1px;
+    text-transform:uppercase; margin:18px 0 10px;
+  }
+  .form-control {
+    border-radius:10px; border:1.5px solid #ddd; font-size:.9rem;
+  }
+  .form-control:focus { border-color:#3498db; box-shadow:0 0 0 3px rgba(52,152,219,.12); }
+  label { font-weight:600; font-size:.85rem; color:#444; margin-bottom:4px; }
+  .btn-predict {
+    background: linear-gradient(135deg, #1565c0, #1976d2);
+    color:white; border:none; border-radius:30px; padding:12px 36px;
+    font-size:.95rem; font-weight:700; cursor:pointer; transition:transform .15s;
+  }
+  .btn-predict:hover { transform:translateY(-2px); box-shadow:0 6px 20px rgba(21,101,192,.3); }
+</style>
+
+<div class="hero-image">
+  <div>
+    <p style="font-size:.8rem; opacity:.8; letter-spacing:2px; text-transform:uppercase;">AI-Powered NPK Analysis</p>
+    <h2>Fertilizer Recommendation</h2>
+    <p style="opacity:.85; font-size:.85rem;">Enter soil values and crop to get fertilizer advice</p>
+  </div>
+</div>
+
+<nav class="sub-nav navbar navbar-expand-lg">
+  <div class="collapse navbar-collapse">
+    <div class="navbar-nav mx-auto">
+      <a class="nav-link" href="{{ url_for('dashboard') }}">📊 Dashboard</a>
+      <a class="nav-link" href="{{ url_for('crop_recommend') }}">🌾 Crop</a>
+      <a class="nav-link active" href="{{ url_for('fertilizer_recommendation') }}">🧪 Fertilizer</a>
+      <a class="nav-link text-danger" href="{{ url_for('logout') }}">🚪 Logout</a>
+    </div>
+  </div>
+</nav>
+
+<div class="form-wrapper">
+  <h5 class="fw-bold text-center mb-1" style="color:#1565c0;">🧪 Soil NPK Analysis</h5>
+  <p class="text-center text-muted mb-3" style="font-size:.82rem;">
+    Enter your current soil NPK values and the crop you want to grow.
+  </p>
+
+  <form method="POST" action="{{ url_for('fert_recommend') }}">
+    <div class="form-section-title">🌱 Current Soil NPK Values</div>
+    <div class="row">
+      <div class="col-md-4 mb-3">
+        <label>Nitrogen (N)</label>
+        <input type="number" class="form-control" name="nitrogen" placeholder="e.g. 80" required>
+      </div>
+      <div class="col-md-4 mb-3">
+        <label>Phosphorus (P)</label>
+        <input type="number" class="form-control" name="phosphorous" placeholder="e.g. 40" required>
+      </div>
+      <div class="col-md-4 mb-3">
+        <label>Potassium (K)</label>
+        <input type="number" class="form-control" name="pottasium" placeholder="e.g. 40" required>
+      </div>
+    </div>
+
+    <div class="form-section-title">🌾 Crop Selection</div>
+    <div class="mb-4">
+      <label>Crop You Want to Grow</label>
+      <select class="form-control" name="cropname" required>
+        <option value="" disabled selected>-- Select a crop --</option>
+        {% for crop in ['rice','maize','chickpea','kidneybeans','pigeonpeas','mothbeans',
+                        'mungbean','blackgram','lentil','pomegranate','banana','mango',
+                        'grapes','watermelon','muskmelon','apple','orange','papaya',
+                        'coconut','cotton','jute','coffee'] %}
+        <option value="{{ crop }}">{{ crop | title }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="text-center">
+      <button type="submit" class="btn-predict">🔍 Analyse & Get Fertilizer Advice</button>
+    </div>
+  </form>
+</div>
+
+<footer class="text-center py-3 bg-dark text-light" style="font-size:.82rem;">
+  🌿 Smart Crop Recommendation System — Explainable AI Edition &nbsp;|&nbsp; Go Green
+</footer>
+{% endblock %}

@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+{% block title %}About Us{% endblock %}
+{% block body %}
+<style>
+  .hero-image {
+    background: linear-gradient(rgba(26,122,62,.75), rgba(39,174,96,.6)),
+                url('/static/images/d.jpg') center/cover;
+    height: 260px; display:flex; align-items:center; justify-content:center; text-align:center; color:white;
+  }
+  .hero-image h1 { font-size:3rem; font-weight:700; }
+  .section-title { font-size:1.8rem; font-weight:700; color:#1a7a3e; }
+  .info-card {
+    background:white; border-radius:16px; padding:1.5rem;
+    box-shadow:0 4px 18px rgba(0,0,0,.06); text-align:center; height:100%;
+  }
+  .info-icon { font-size:2.5rem; margin-bottom:.8rem; }
+  .footer { background:#1a1a2e; color:#aaa; text-align:center; padding:20px; font-size:.82rem; }
+</style>
+
+<div class="hero-image">
+  <div>
+    <h1>About Us</h1>
+    <p style="opacity:.85; font-size:.95rem;">Learn about our AI-powered smart crop system</p>
+  </div>
+</div>
+
+<section class="py-5" style="background:#f5f7f5;">
+  <div class="container">
+    <div class="text-center mb-5">
+      <h2 class="section-title">Smart Crop Recommendation System</h2>
+      <p style="color:#666; max-width:650px; margin:auto; line-height:1.8;">
+        An intelligent agricultural decision-support system designed to help farmers
+        select the most suitable crop based on soil and environmental conditions.
+      </p>
+    </div>
+
+    <div class="row align-items-center g-5 mb-5">
+      <div class="col-lg-6">
+        <img src="{{ url_for('static', filename='images/3.jpeg') }}" alt="About"
+             style="width:100%; border-radius:18px; box-shadow:0 8px 30px rgba(0,0,0,.1);">
+      </div>
+      <div class="col-lg-6">
+        <h3 style="font-weight:700; color:#222;">Improving Agriculture,<br>Improving Lives</h3>
+        <p style="color:#666; line-height:1.9; margin-top:1rem;">
+          Traditional crop selection methods are often based on experience and assumptions,
+          which may lead to poor yield and financial loss. Our system provides accurate crop
+          recommendations using Machine Learning models trained on agricultural datasets.
+        </p>
+        <p style="color:#666; line-height:1.9;">
+          We integrate <strong>Explainable AI</strong> techniques to explain the reasons
+          behind each recommendation — increasing transparency and building trust among users.
+        </p>
+      </div>
+    </div>
+
+    <div class="row g-4">
+      <div class="col-md-3 col-6">
+        <div class="info-card">
+          <div class="info-icon">🌾</div>
+          <h6 style="font-weight:700;">What to plant?</h6>
+          <p style="font-size:.8rem; color:#777;">Best crop for your soil & climate</p>
+        </div>
+      </div>
+      <div class="col-md-3 col-6">
+        <div class="info-card">
+          <div class="info-icon">🧪</div>
+          <h6 style="font-weight:700;">What fertilizer?</h6>
+          <p style="font-size:.8rem; color:#777;">NPK recommendations for your crop</p>
+        </div>
+      </div>
+      <div class="col-md-3 col-6">
+        <div class="info-card">
+          <div class="info-icon">🧠</div>
+          <h6 style="font-weight:700;">Why this crop?</h6>
+          <p style="font-size:.8rem; color:#777;">XAI explains every decision clearly</p>
+        </div>
+      </div>
+      <div class="col-md-3 col-6">
+        <div class="info-card">
+          <div class="info-icon">📊</div>
+          <h6 style="font-weight:700;">Model accuracy</h6>
+          <p style="font-size:.8rem; color:#777;">Compare 4 ML algorithms live</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Models section -->
+<section class="py-5" style="background:white;">
+  <div class="container text-center">
+    <h2 class="section-title mb-2">ML Algorithms Used</h2>
+    <p style="color:#777; margin-bottom:2rem;">Four powerful classification models evaluated and compared</p>
+    <div class="row g-3 justify-content-center">
+      {% for name, acc, icon in [('Random Forest','99.1%','🌳'),('Decision Tree','98.2%','🔀'),('SVM','97.7%','📐'),('XGBoost','98.9%','⚡')] %}
+      <div class="col-lg-3 col-md-6">
+        <div class="info-card">
+          <div class="info-icon">{{ icon }}</div>
+          <h6 style="font-weight:700;">{{ name }}</h6>
+          <div style="font-size:1.2rem; font-weight:700; color:#27ae60;">{{ acc }}</div>
+          <div style="font-size:.75rem; color:#aaa;">Accuracy</div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<div class="footer">🌿 Smart Crop Recommendation System — Explainable AI Edition &nbsp;|&nbsp; Go Green</div>
+{% endblock %}

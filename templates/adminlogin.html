@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% block title %}Admin Login{% endblock %}
+{% block body %}
+<style>
+  .auth-page {
+    min-height:85vh; display:flex; align-items:center; justify-content:center;
+    background:linear-gradient(135deg,#1a1a2e 0%,#16213e 100%); padding:2rem 1rem;
+  }
+  .auth-card {
+    background:white; border-radius:22px; padding:2.5rem 2rem;
+    width:100%; max-width:420px; box-shadow:0 8px 40px rgba(0,0,0,.3);
+  }
+  .auth-icon  { font-size:3rem; text-align:center; margin-bottom:.5rem; }
+  .auth-title { text-align:center; font-weight:700; color:#1a1a2e; font-size:1.5rem; margin-bottom:.3rem; }
+  .auth-sub   { text-align:center; color:#999; font-size:.82rem; margin-bottom:1.5rem; }
+  .form-control {
+    border-radius:10px; border:1.5px solid #ddd; padding:10px 14px; font-size:.9rem;
+  }
+  .form-control:focus { border-color:#e74c3c; box-shadow:0 0 0 3px rgba(231,76,60,.12); }
+  label { font-weight:600; font-size:.85rem; color:#444; margin-bottom:5px; }
+  .btn-auth {
+    width:100%; padding:12px;
+    background:linear-gradient(135deg,#c0392b,#e74c3c);
+    color:white; border:none; border-radius:12px;
+    font-weight:700; font-size:.95rem; cursor:pointer; transition:transform .15s;
+  }
+  .btn-auth:hover { transform:translateY(-2px); box-shadow:0 6px 20px rgba(231,76,60,.3); }
+  .error-msg { color:#e74c3c; font-size:.78rem; margin-top:4px; }
+  .admin-badge {
+    text-align:center; background:#fff3f3; border-radius:10px;
+    padding:8px; margin-bottom:1.2rem; font-size:.78rem; color:#c0392b; font-weight:600;
+  }
+</style>
+
+<div class="auth-page">
+  <div class="auth-card">
+    <div class="auth-icon">🛡️</div>
+    <div class="auth-title">Admin Panel</div>
+    <div class="auth-sub">Restricted access — authorised personnel only</div>
+    <div class="admin-badge">🔒 Secure Admin Login</div>
+
+    <form method="POST" action="">
+      {{ form.hidden_tag() }}
+      <div class="mb-3">
+        <label>Admin Username</label>
+        {{ form.username(class="form-control", placeholder="Admin username") }}
+        {% for err in form.username.errors %}
+          <div class="error-msg">{{ err }}</div>
+        {% endfor %}
+      </div>
+      <div class="mb-4">
+        <label>Password</label>
+        {{ form.password(class="form-control", placeholder="Admin password") }}
+        {% for err in form.password.errors %}
+          <div class="error-msg">{{ err }}</div>
+        {% endfor %}
+      </div>
+      <button type="submit" class="btn-auth">🛡️ Admin Sign In</button>
+    </form>
+
+    <div style="text-align:center; margin-top:1rem; font-size:.78rem; color:#bbb;">
+      <a href="{{ url_for('hello_world') }}" style="color:#999; text-decoration:none;">← Back to Home</a>
+    </div>
+  </div>
+</div>
+{% endblock %}
